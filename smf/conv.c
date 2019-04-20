@@ -24,6 +24,8 @@ int main( int argc, char* argv[] )
   int size;
   int c1, c2, c3, c4, c5;
   unsigned char buf[256];
+  unsigned int count = 0;
+
   fp2 = fopen("tmp.txt", "r");
   fp = fopen("out.mid", "w" );
   if ( fp == NULL || fp2 == NULL ){
@@ -35,6 +37,8 @@ int main( int argc, char* argv[] )
   size = ftell(fp2); 
   fseek(fp2, 0, SEEK_SET); 
 
+  fwrite( header, 18, 1, fp );
+
   printf( "size: %d\n", size );
   while ( 1 ){
     fread( buf, 5, 1, fp2);
@@ -44,9 +48,18 @@ int main( int argc, char* argv[] )
       break;
     }
     printf( "%d, %d, %d, %d, %d\n", buf[0], buf[1], buf[2], buf[3], buf[4] );
+    fwrite( buf, 3, 1, fp );
+    if ( buf[3] == 0 ){
+      fwrite(buf+4, 1, 1, fp );
+      count += 4;
+    }else{
+      fwrite(buf+3, 2, 1, fp );
+      count += 5;
+    }
   }
 
-  fwrite( header, 18, 1, fp );
+  fseek(fp, 18, SEEK_SET); 
+  fwrite( &count, sizeof(unsigned int), 1, fp );
   
   fclose( fp );
   fclose( fp2 );
