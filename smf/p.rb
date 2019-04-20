@@ -1,7 +1,11 @@
+pre = 0
+
 while buf = gets
     buf.scan(/<li>(\d+),(\d+),(\d+),(\d+)<\/li>/){
         |m|
-        time = $4.to_i
+        time = ($4.to_i - pre) if pre > 0
+        time = 0 if pre == 0
+        pre = $4.to_i
         a = $1.to_i
         b = $2.to_i
         c = $3.to_i
