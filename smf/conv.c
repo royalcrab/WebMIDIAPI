@@ -75,8 +75,13 @@ int main( int argc, char* argv[] )
 
     length = calc( buf[3], buf[4]);
 
-    printf( "%s: %3d, %3d, %3d, %3d, %3d, %3d\n", note[buf[1]], 
-      buf[0], buf[1], buf[2], buf[3], buf[4], length );
+    if ( buf[0] == 0x90 || buf[0] == 0x80 ){
+      printf( "%s: %3d, %3d, %3d, %3d, %3d, %3d\n", note[buf[1]], 
+        buf[0], buf[1], buf[2], buf[3], buf[4], length );
+    }else{
+       printf( "   : %3d, %3d, %3d, %3d, %3d, %3d\n", 
+        buf[0], buf[1], buf[2], buf[3], buf[4], length );     
+    }
     if ( buf[3] == 0 ){
       fwrite(buf+4, 1, 1, fp );
       count += 4;
