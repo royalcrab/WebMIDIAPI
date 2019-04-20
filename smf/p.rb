@@ -3,7 +3,7 @@ pre = 0
 while buf = gets
     buf.scan(/<li>(\d+),(\d+),(\d+),(\d+)<\/li>/){
         |m|
-        time = ($4.to_i - pre) + 1000 if pre > 1
+        time = ($4.to_i - pre) if pre > 0
         time = 1000 if pre == 0
         pre = $4.to_i
         a = $1.to_i
