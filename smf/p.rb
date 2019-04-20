@@ -5,6 +5,6 @@ while buf = gets
         a = $1.to_i
         b = $2.to_i
         c = $3.to_i
-        put [a.to_s(16), b.to_s(16), c.to_s(16), time.to_s(16), '\n'].join(',')
+        print [a.to_s(16), b.to_s(16), c.to_s(16), time.to_s(16), '\n'].join(',')
     }
 end
