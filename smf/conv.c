@@ -17,18 +17,28 @@ unsigned long int conv( unsigned long int x )
 
 int main( int argc, char* argv[] )
 {
-  unsigned char header[18] = { 0x4d, 0x54, 0x68, 0x64, 0, 0, 0, 6, 0, 0, 0, 1, 0, 0x78, 0x4d, 0x54, 0x72, 0x6b };
+  unsigned char header[18] = { 0x4d, 0x54, 0x68, 0x64, 0, 0, 0, 6,
+   0, 0, 0, 1, 0, 0x78, 0x4d, 0x54, 0x72, 0x6b };
 
-  FILE *fp;
+  FILE *fp, *fp2;
+  int size;
+  fp2 = fopen("sample.txt", "r");
   fp = fopen("out.mid", "w" );
-  if ( fp == NULL ){
+  if ( fp == NULL || fp2 == NULL ){
     perror("file:" );
     return -1;
   }
   
+  fseek(f, 0, SEEK_END); 
+  size = ftell(f); 
+  fseek(f, 0, SEEK_SET); 
+
+  printf( "size: %d\n", size );
+
   fwrite( header, 18, 1, fp );
   
   fclose( fp );
+  fclose( fp2 );
 
   return 0;
 }
