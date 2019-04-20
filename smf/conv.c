@@ -24,7 +24,7 @@ int main( int argc, char* argv[] )
   int size;
   int c1, c2, c3, c4, c5;
   unsigned char buf[256];
-  unsigned int count = 0;
+  unsigned long int count = 0;
 
   fp2 = fopen("tmp.txt", "r");
   fp = fopen("out.mid", "w" );
@@ -61,7 +61,7 @@ int main( int argc, char* argv[] )
   }
 
   fseek(fp, 18, SEEK_SET); 
-  printf( "buffer size: %d (%x)\n", count, count );
+  printf( "buffer size: %ld (%x)\n", count, count );
   fwrite( &count, sizeof(unsigned int), 1, fp );
   
   fclose( fp );
