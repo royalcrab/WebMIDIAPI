@@ -76,10 +76,14 @@ int main( int argc, char* argv[] )
     length = calc( buf[3], buf[4]);
 
     if ( buf[0] == 0x90 || buf[0] == 0x80 ){
-      printf( "%s: %3d, %3d, %3d, %3d, %3d, %3d\n", note[buf[1]], 
+      printf( "%s : %3d, %3d, %3d, %3d, %3d, %3d; ", note[buf[1]], 
+        buf[0], buf[1], buf[2], buf[3], buf[4], length );
+      printf( "%2x, %2x, %2x, %2x, %2x, %4x\n",
         buf[0], buf[1], buf[2], buf[3], buf[4], length );
     }else{
-       printf( "   : %3d, %3d, %3d, %3d, %3d, %3d\n", 
+      printf( "   : %3d, %3d, %3d, %3d, %3d, %3d; ", 
+        buf[0], buf[1], buf[2], buf[3], buf[4], length );
+      printf( "%2x, %2x, %2x, %2x, %2x, %4x\n",
         buf[0], buf[1], buf[2], buf[3], buf[4], length );     
     }
     if ( buf[3] == 0 ){
