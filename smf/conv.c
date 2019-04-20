@@ -15,6 +15,17 @@ unsigned long int conv( unsigned long int x )
   return ( a | b | c | d );
 }
 
+unsigned int calc(unsigned char a, unsigned char b)
+{
+  unsigned int ax = (int)a;
+  unsigned int bx = (int)b;
+
+  if ( ax & 0x80 )
+    return ((ax & 0x7f) << 7) | (bx & 0x7f);
+
+  return b;
+}
+
 int main( int argc, char* argv[] )
 {
   unsigned char header[18] = { 0x4d, 0x54, 0x68, 0x64, 0, 0, 0, 6,
@@ -25,6 +36,7 @@ int main( int argc, char* argv[] )
   int c1, c2, c3, c4, c5;
   unsigned char buf[256];
   unsigned long int count = 0;
+  unsigned int length;
 
   fp2 = fopen("tmp.txt", "r");
   fp = fopen("out.mid", "w" );
@@ -48,7 +60,10 @@ int main( int argc, char* argv[] )
       perror( "read file" );
       break;
     }
-    printf( "%d, %d, %d, %d, %d\n", buf[0], buf[1], buf[2], buf[3], buf[4] );
+
+    length = calc( buf[3], buf[4]);
+
+    printf( "%d, %d, %d, %d, %d, %d\n", buf[0], buf[1], buf[2], buf[3], buf[4], length );
     if ( buf[3] == 0 ){
       fwrite(buf+4, 1, 1, fp );
       count += 4;
