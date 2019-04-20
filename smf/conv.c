@@ -43,7 +43,7 @@ int main( int argc, char* argv[] )
       perror( "read file" );
       break;
     }
-    sscanf(buf, "%d,%d,%d,%d,%d", &c1, &c2, &c3, &c4, &c5);
+    sscanf(buf, "%d,%d,%d,%d,%d,", &c1, &c2, &c3, &c4, &c5);
     printf( "%d, %d, %d, %d, %d\n", c1, c2, c3, c4, c5);
   }
 
