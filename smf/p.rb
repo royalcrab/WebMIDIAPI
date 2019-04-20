@@ -15,7 +15,7 @@ open('tmp.txt', 'wb'){ |f|
 
             ta = time & 0x7f;
             tb = (time >> 7) & 0x7f;
-            (tb |= 0x80) if ((time & 0x80) > 0)
+            (tb |= 0x80) if time > 0x7f
 
             f.write([a,b,c,tb,ta].pack("C*"))
 
