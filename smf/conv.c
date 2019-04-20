@@ -37,14 +37,13 @@ int main( int argc, char* argv[] )
 
   printf( "size: %d\n", size );
   while ( 1 ){
-    fgets(buf, 256, fp2);
+    fread( buf, 5, 1, fp2);
     if ( feof(fp2) ) break;
     if ( ferror(fp2) ){
       perror( "read file" );
       break;
     }
-    sscanf(buf, "%d,%d,%d,%d,%d,", &c1, &c2, &c3, &c4, &c5);
-    printf( "%d, %d, %d, %d, %d\n", c1, c2, c3, c4, c5);
+    printf( "%d, %d, %d, %d, %d\n", buf[0], buf[1], buf[2], buf[3], buf[4] );
   }
 
   fwrite( header, 18, 1, fp );
