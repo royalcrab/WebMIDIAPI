@@ -29,9 +29,9 @@ int main( int argc, char* argv[] )
     return -1;
   }
   
-  fseek(f, 0, SEEK_END); 
-  size = ftell(f); 
-  fseek(f, 0, SEEK_SET); 
+  fseek(fp2, 0, SEEK_END); 
+  size = ftell(fp2); 
+  fseek(fp2, 0, SEEK_SET); 
 
   printf( "size: %d\n", size );
 
