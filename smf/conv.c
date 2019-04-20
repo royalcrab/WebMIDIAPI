@@ -22,6 +22,8 @@ int main( int argc, char* argv[] )
 
   FILE *fp, *fp2;
   int size;
+  int c1, c2, c3, c4 c5;
+  char buf[256];
   fp2 = fopen("sample.txt", "r");
   fp = fopen("out.mid", "w" );
   if ( fp == NULL || fp2 == NULL ){
@@ -34,6 +36,16 @@ int main( int argc, char* argv[] )
   fseek(fp2, 0, SEEK_SET); 
 
   printf( "size: %d\n", size );
+  while ( 1 ){
+    fgets(buf, fp2);
+    if ( feof() ) break;
+    if ( ferror() ){
+      perror( "read file" );
+      break;
+    }
+    sscanf(buf, "%d,%d,%d,%d,%d", &c1, &c2, &c3, &c4, &c5);
+    printf( "%d, %d, %d, %d, %d\n", c1, c2, c3, c4, c5);
+  }
 
   fwrite( header, 18, 1, fp );
   

@@ -10,6 +10,11 @@ while buf = gets
         a = $1.to_i
         b = $2.to_i
         c = $3.to_i
-        print [a.to_s(16), b.to_s(16), c.to_s(16), time.to_s(16), "\n"].join(',')
+
+        ta = time & 0x7f;
+        tb = (time >> 7) & 0x7f;
+        tb |= 0x80 if (time & 0x80) > 0
+
+        print [a, b, c, tb, ta, "\n"].join(',')
     }
 end
