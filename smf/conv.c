@@ -38,7 +38,8 @@ int main( int argc, char* argv[] )
   fseek(fp2, 0, SEEK_SET); 
 
   fwrite( header, 18, 1, fp );
-
+  fwrite( &count, sizeof(unsigned int), 1, fp );
+  
   printf( "size: %d\n", size );
   while ( 1 ){
     fread( buf, 5, 1, fp2);
@@ -48,7 +49,6 @@ int main( int argc, char* argv[] )
       break;
     }
     printf( "%d, %d, %d, %d, %d\n", buf[0], buf[1], buf[2], buf[3], buf[4] );
-    fwrite( buf, 3, 1, fp );
     if ( buf[3] == 0 ){
       fwrite(buf+4, 1, 1, fp );
       count += 4;
@@ -56,6 +56,8 @@ int main( int argc, char* argv[] )
       fwrite(buf+3, 2, 1, fp );
       count += 5;
     }
+    fwrite( buf, 3, 1, fp );
+
   }
 
   fseek(fp, 18, SEEK_SET); 
