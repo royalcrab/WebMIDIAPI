@@ -1,5 +1,5 @@
 pre = 0
-open('tmp.txt', 'bw'){ |f|
+open('tmp.txt', 'wb'){ |f|
     while buf = gets
         buf.scan(/<li>(\d+),(\d+),(\d+),(\d+)<\/li>/){
             |m|
