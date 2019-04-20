@@ -3,6 +3,8 @@ open('tmp.txt', 'wb'){ |f|
     while buf = gets
         buf.scan(/<li>(\d+),(\d+),(\d+),(\d+)<\/li>/){
             |m|
+            ta = 0
+            tb = 0
             time = ($4.to_i - pre) if pre > 0
             time = 1000 if pre == 0
             time = 16000 if time > 16000
@@ -17,7 +19,7 @@ open('tmp.txt', 'wb'){ |f|
 
             f.write([a,b,c,tb,ta].pack("C*"))
 
-#            print [a, b, c, tb, ta, "\n"].join(',')
+            print [a, b, c, tb, ta, time, "\n"].join(',')
         }
     end
 }
