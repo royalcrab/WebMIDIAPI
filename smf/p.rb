@@ -1,5 +1,5 @@
 while buf = gets
-    buf.sub(/<li>(\d+),(\d+),(\d+),(\d+)<\/li>/){
+    buf.scan(/<li>(\d+),(\d+),(\d+),(\d+)<\/li>/){
         |m|
         p m
     }
