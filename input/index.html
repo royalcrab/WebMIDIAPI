@@ -100,7 +100,8 @@ function saveTextAsFile()
     var textToWrite = document.getElementById("midi-data").innerHTML;
     var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
     //var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
-    var fileNameToSaveAs = "midi" + counter + ".txt";
+    var now = new Date();
+    var fileNameToSaveAs = "midi_" + now.toLocaleDateString() + "_" + now.toLocaleTimeString() + ".txt";
     var downloadLink = document.createElement("a");
 
     downloadLink.download = fileNameToSaveAs;
@@ -126,6 +127,18 @@ function saveTextAsFile()
     downloadLink.click();
 }
 
+function resetNumber(){
+  counter = 0;
+}
+
+function clearText(){
+  var mididata = document.querySelector('#midi-data ul');
+  while( mididata.firstChild ){
+    mididata.removeChild( mididata.firstChild );
+  }
+  startTime = new Date();
+}
+
 </script>
 
 <title>MIDI Input example</title>
@@ -137,7 +150,9 @@ function saveTextAsFile()
 <div>
   <p>Web MIDI API Sample</p>
   <button onclick="saveTextAsFile()">Save</button>
-  <input type="text" id="inputFileNameToSaveAs" value="sample.txt"/>
+
+  <button onclick="clearText()">Clear</button>
+  <input type="text" id="inputFileNameToSaveAs"/>
   <section id="midi-data">  
     <ul></ul>
   </section>
