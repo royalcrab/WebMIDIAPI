@@ -22,7 +22,7 @@ int main( int argc, char* argv[] )
 
   FILE *fp, *fp2;
   int size;
-  int c1, c2, c3, c4 c5;
+  int c1, c2, c3, c4, c5;
   char buf[256];
   fp2 = fopen("sample.txt", "r");
   fp = fopen("out.mid", "w" );
@@ -37,9 +37,9 @@ int main( int argc, char* argv[] )
 
   printf( "size: %d\n", size );
   while ( 1 ){
-    fgets(buf, fp2);
-    if ( feof() ) break;
-    if ( ferror() ){
+    fgets(buf, 256, fp2);
+    if ( feof(fp2) ) break;
+    if ( ferror(fp2) ){
       perror( "read file" );
       break;
     }
