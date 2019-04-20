@@ -61,7 +61,7 @@ int main( int argc, char* argv[] )
   }
 
   fseek(fp, 18, SEEK_SET); 
-  printf( "buffer size: %ld (%x)\n", count, count );
+  printf( "buffer size: %ld (%lx)\n", count, count );
   fwrite( &count, sizeof(unsigned int), 1, fp );
   
   fclose( fp );
