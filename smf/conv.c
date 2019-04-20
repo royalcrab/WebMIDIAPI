@@ -20,7 +20,7 @@ int main( int argc, char* argv[] )
   unsigned char header[18] = { 0x4d, 0x54, 0x68, 0x64, 0, 0, 0, 6, 0, 0, 0, 1, 0, 0x78, 0x4d, 0x54, 0x72, 0x6b };
 
   FILE *fp;
-  fp = fopen("out.mid", "bw" );
+  fp = fopen("out.mid", "w" );
   if ( fp == NULL ){
     perror("file:" );
     return -1;
