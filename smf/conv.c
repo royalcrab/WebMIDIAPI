@@ -23,7 +23,7 @@ int main( int argc, char* argv[] )
   FILE *fp, *fp2;
   int size;
   int c1, c2, c3, c4, c5;
-  char buf[256];
+  unsigned char buf[256];
   fp2 = fopen("tmp.txt", "r");
   fp = fopen("out.mid", "w" );
   if ( fp == NULL || fp2 == NULL ){
