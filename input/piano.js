@@ -4,6 +4,7 @@ var offsetX = 0;
 var offsetY = 20;
 var keySize = 10;
 var blackKeySize = 3;
+var rect;
 
 function init(){
     canvas = document.getElementById("piano");
@@ -18,6 +19,7 @@ function init(){
 
     canvas.addEventListener("mousemove", onMove, false );
 
+    rect = canvas.getBoundingClientRect();
  
     var i = 0;
     while ( i < 88 ){
@@ -254,7 +256,7 @@ function getNote(x, y){
 var preNote = -1;
 function onMove(e){
     console.log( e.clientX + "," + e.clientY );
-    note = getNote(e.clientX, e.clientY );
+    note = getNote(e.clientX-rect.left, e.clientY-rect.top );
     if ( note == preNote ) return 0;
     if ( 20 < preNote && preNote < 109 ){
         drawKey( preNote, offsetX, offsetY, blackKeySize, keySize, "white", "black", "black" );
