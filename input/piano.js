@@ -4,7 +4,9 @@ var offsetX = 0;
 var offsetY = 20;
 var keySize = 10;
 var blackKeySize = 3;
-var rect;
+
+var nazoX = 10;
+var preNote = -1;
 
 function init(){
     canvas = document.getElementById("piano");
@@ -18,8 +20,6 @@ function init(){
     canvas.addEventListener('mouseout', onOut, false);
 
     canvas.addEventListener("mousemove", onMove, false );
-
-    rect = canvas.getBoundingClientRect();
  
     var i = 0;
     while ( i < 88 ){
@@ -184,6 +184,10 @@ function onClick(e) {
 
 function onOver(e) {
   console.log("mouseover");
+    if ( 20 < preNote && preNote < 109 ){
+        drawKey( preNote, offsetX, offsetY, blackKeySize, keySize, "white", "black", "black" );
+        preNote = -1;
+    }
 }
 
 function onOut() {
@@ -253,8 +257,7 @@ function getNote(x, y){
     return -1;
 }
 
-var nazoX = 10;
-var preNote = -1;
+
 function onMove(e){
     var x = e.clientX-canvas.offsetLeft+nazoX;
     var y = e.clientY-canvas.offsetTop;
