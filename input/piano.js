@@ -256,10 +256,10 @@ function getNote(x, y){
 var nazoX = 10;
 var preNote = -1;
 function onMove(e){
-    var x = e.clientX-canvas.offsetLeft-nazoX;
+    var x = e.clientX-canvas.offsetLeft+nazoX;
     var y = e.clientY-canvas.offsetTop;
     console.log( "x:" + x + " y:" + y );
-    note = getNote(e.clientX-canvas.offsetLeft-nazoX, e.clientY-canvas.offsetTop );
+    note = getNote(e.clientX-canvas.offsetLeft+nazoX, e.clientY-canvas.offsetTop );
     if ( note == preNote ) return 0;
     if ( 20 < preNote && preNote < 109 ){
         drawKey( preNote, offsetX, offsetY, blackKeySize, keySize, "white", "black", "black" );
