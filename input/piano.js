@@ -255,8 +255,9 @@ function getNote(x, y){
 
 var preNote = -1;
 function onMove(e){
-    console.log( "x:" + e.clientX-canvas.offsetLeft );
-    console.log( "y:" + e.clientY-canvas.offsetTop );
+    var x = e.clientX-canvas.offsetLeft；
+    var y = e.clientY-canvas.offsetTop;
+    console.log( "x:" + x + " y:" + y );
     note = getNote(e.clientX-canvas.offsetLeft, e.clientY-canvas.offsetTop );
     if ( note == preNote ) return 0;
     if ( 20 < preNote && preNote < 109 ){
