@@ -184,14 +184,15 @@ function onClick(e) {
 
 function onOver(e) {
   console.log("mouseover");
-    if ( 20 < preNote && preNote < 109 ){
-        drawKey( preNote, offsetX, offsetY, blackKeySize, keySize, "white", "black", "black" );
-        preNote = -1;
-    }
+
 }
 
 function onOut() {
   console.log("mouseout");
+  if ( 20 < preNote && preNote < 109 ){
+    drawKey( preNote, offsetX, offsetY, blackKeySize, keySize, "white", "black", "black" );
+    preNote = -1;
+  }
 }
 
 function getNote(x, y){
