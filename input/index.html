@@ -88,9 +88,21 @@ function gotMIDImessage(messageData) {
   newItem.appendChild(document.createTextNode(newText));
   dataList.appendChild(newItem);
   
-  var str;
+  var str = "";
   for (var i=0; i<event.data.length; i++) {
     str += "0x" + event.data[i].toString(16) + " ";
+  }
+  if ( canvas != null ){
+    str += "ok";
+    if ( event.data[0] == 0x90 ){
+      if ( event.data[2] == 0 ){
+        drawKey(event.data[1], offsetX, offsetY, blackKeySize, keySize, "white", "black", "black");
+      }else{
+        drawKey(event.data[1], offsetX, offsetY, blackKeySize, keySize, "green", "green", "green");
+      }
+    }else if ( event.data[0] == 0x80 ){
+      drawKey(event.data[1], offsetX, offsetY, blackKeySize, keySize, "white", "black", "black");
+    }
   }
   console.log( str );
 }
