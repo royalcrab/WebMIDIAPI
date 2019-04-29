@@ -255,7 +255,7 @@ function getNote(x, y){
 
 var preNote = -1;
 function onMove(e){
-    var x = e.clientX-canvas.offsetLeft；
+    var x = e.clientX-canvas.offsetLeft;
     var y = e.clientY-canvas.offsetTop;
     console.log( "x:" + x + " y:" + y );
     note = getNote(e.clientX-canvas.offsetLeft, e.clientY-canvas.offsetTop );
