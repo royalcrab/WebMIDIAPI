@@ -1,7 +1,7 @@
 var canvas;
 var ctx;
-var offsetX = 10;
-var offsetY = 0;
+var offsetX = 0;
+var offsetY = 20;
 var keySize = 10;
 var blackKeySize = 3;
 
