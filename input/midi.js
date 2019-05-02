@@ -2,7 +2,7 @@ var midi, data;
 var arr = [];
 var startTime = new Date();
 var counter = 0;
-var name ;
+var name;
 
 // start talking to MIDI controller
 if (navigator.requestMIDIAccess) {
@@ -143,7 +143,14 @@ function postMidiData() {
         }
     }*/
 
-    name = new Date();
+    var tmpName = $('#playerName').val();
+    var tmpTime = new Date();
+
+    if ( tmpName == null || tmpName == "" ){
+        name = tmpTime.toLocaleDateString() + "_" + tmpTime.toLocaleTimeString();
+    }else{
+        name = tmpName + "_" + tmpTime.toLocaleDateString() + "_" + tmpTime.toLocaleTimeString();
+    }
     var JSONdata = '{ "midi": ' + JSON.stringify(arr) + ', "name": "' + name.toString() + '" }';
     console.log( JSONdata );
 
