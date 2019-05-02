@@ -2,6 +2,7 @@ var midi, data;
 var arr = [];
 var startTime = new Date();
 var counter = 0;
+var name ;
 
 // start talking to MIDI controller
 if (navigator.requestMIDIAccess) {
@@ -142,7 +143,8 @@ function postMidiData() {
         }
     }*/
 
-    var JSONdata = '{ "midi": ' + JSON.stringify(arr) + '}';
+    name = new Date();
+    var JSONdata = '{ "midi": ' + JSON.stringify(arr) + ', "name": "' + name.toString() + '" }';
     console.log( JSONdata );
 
     // Using AJAX

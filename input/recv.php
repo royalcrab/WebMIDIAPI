@@ -9,12 +9,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $data = json_decode($json_string);
     error_log($json_string, 3, "./error.log" );
-    error_log("MIDI\n", 3, "./error.log");
     if ( $data->midi == null ){
         error_log("NULL\n", 3, "./error.log");
     }else{
-        error_log("OK\n", 3, "./error.log");
+        error_log("MIDI: \n", 3, "./error.log");
         error_log(print_r($data->midi,true), 3, "./error.log");
+        error_log("NAME: \n", 3, "./error.log");
+        error_log(print_r($data->,true), 3, "./error.log");
      }
 }
 
@@ -23,6 +24,7 @@ if (! isset($_SERVER['HTTP_X_REQUESTED_WITH']) ||
 	die(json_encode(array('status' => "error")));
 }
  
+// no mean code
 $value = array(
 	3 => array('status' => 'ok')
 );
