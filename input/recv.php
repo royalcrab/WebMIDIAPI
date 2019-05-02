@@ -31,6 +31,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $m3 = $value[2];
             $m4 = $value[3];
 
+            if ( $m3 == null ) $m3 = 0;
+            if ( $m4 == null ) $m4 = 0;
+
             $cmd = "INSERT INTO `mididata` (`id`, `time`, `c1`, `c2`, `c3`, `name`)";
             $cmd .= " VALUES (NULL, '" . $time . "', '" . $m2 . "', '" . $m3 . "', '" . $m4 . "', '" . $data->name . "'); ";
 
