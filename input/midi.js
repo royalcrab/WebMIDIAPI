@@ -142,11 +142,11 @@ function postMidiData() {
         }
     }*/
 
-    var JSONdata = '{ "midi": ' + JSON.stringify(res) + '}';
+    var JSONdata = '{ "midi": ' + JSON.stringify(arr) + '}';
     console.log( JSONdata );
 
     // Using AJAX
-    var url = "/kani/recv.php";
+    var url = "recv.php";
 
     $.ajax({
         type : 'post',
