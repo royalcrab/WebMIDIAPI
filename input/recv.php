@@ -1,8 +1,18 @@
 <?php
 $data = "";
-
-error_log("hoge\n", 3, "./error.log");
-
+$database = "iot";
+$host = "localhost";
+require("pw.php");
+try {
+    $pdo = new PDO('mysql:host=localhost;dbname=iot;charset=utf8',$user,$pw,array(PDO::ATTR_EMULATE_PREPARES => false));
+/*    $dbs = $pdo->query( 'show tables;' );
+    while( ( $db = $dbs->fetchColumn( 0 ) ) !== false )
+    {
+        echo $db.'<br>';
+    }*/
+} catch (PDOException $e) {
+    exit('DB connection refused.'.$e->getMessage());
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $json_string = file_get_contents('php://input') ; ## This time Kimo
@@ -13,9 +23,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         error_log("NULL\n", 3, "./error.log");
     }else{
         error_log("MIDI: \n", 3, "./error.log");
-        error_log(print_r($data->midi,true), 3, "./error.log");
-        error_log("NAME: \n", 3, "./error.log");
-        error_log(print_r($data->,true), 3, "./error.log");
+        foreach ($data->midi as $value) {
+//            error_log(print_r($value, true), 3, "./error.log" );
+
+            $time = $value[0];
+            $m2 = $value[1];
+            $m3 = $value[2];
+            $m4 = $value[3];
+
+            $cmd = "INSERT INTO `mididata` (`id`, `time`, `c1`, `c2`, `c3`, `name`)";
+            $cmd .= " VALUES (NULL, '" . $time . "', '" . $m2 . "', '" . $m3 . "', '" . $m4 . "', '" . $data->name . "'); ";
+
+            error_log($cmd . "\n", 3, "./error.log" );
+
+            $pdo->query( $cmd );
+
+        }
+
+        //        error_log(print_r($data->midi,true), 3, "./error.log");
+//        error_log("NAME: \n", 3, "./error.log");
+//        error_log(print_r($data->name,true), 3, "./error.log");
+
+        
+
      }
 }
 
