@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<script type="text/javascript" src="midi.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 
 <style>
 body {
@@ -52,125 +54,24 @@ body {
     font-size: 1em;
     font-family: monospace;
   }
-
-
-
 </style>
 <script>
-var midi, data;
-var startTime = new Date();
-// start talking to MIDI controller
-if (navigator.requestMIDIAccess) {
-  navigator.requestMIDIAccess({
-    sysex: false
-  }).then(onMIDISuccess, onMIDIFailure);
-} else {
-  console.warn("No MIDI support in your browser")
-}
 
-// on success
-function onMIDISuccess(midiData) {
-  // this is all our MIDI data
-  midi = midiData;
-  var allInputs = midi.inputs.values();
-  // loop over all available inputs and listen for any MIDI input
-  for (var input = allInputs.next(); input && !input.done; input = allInputs.next()) {
-    // when a MIDI value is received call the onMIDIMessage function
-    input.value.onmidimessage = gotMIDImessage;
-  }
-}
-
-function gotMIDImessage(messageData) {
-  var dataList = document.querySelector('#midi-data ul');
-  var newItem = document.createElement('li');
-  var newTime = new Date();
-  var newText = messageData.data + "," + ((newTime.getTime()-startTime.getTime()));
-  newItem.appendChild(document.createTextNode(newText));
-  dataList.appendChild(newItem);
-  
-  var str = "";
-  for (var i=0; i<event.data.length; i++) {
-    str += "0x" + event.data[i].toString(16) + " ";
-  }
-  if ( canvas != null ){
-    str += "ok";
-    if ( event.data[0] == 0x90 ){
-      if ( event.data[2] == 0 ){
-        drawKey(event.data[1], offsetX, offsetY, blackKeySize, keySize, "white", "black", "black");
-      }else{
-        drawKey(event.data[1], offsetX, offsetY, blackKeySize, keySize, "green", "green", "green");
-      }
-    }else if ( event.data[0] == 0x80 ){
-      drawKey(event.data[1], offsetX, offsetY, blackKeySize, keySize, "white", "black", "black");
-    }
-  }
-  console.log( str );
-}
-
-// on failure
-function onMIDIFailure() {
-  console.warn("Not found MIDI controller")
-}
-
-var counter = 0;
-function saveTextAsFile()
-{
-    var textToWrite = document.getElementById("midi-data").innerHTML;
-    var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
-    //var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
-    var now = new Date();
-    var fileNameToSaveAs = "midi_" + now.toLocaleDateString() + "_" + now.toLocaleTimeString() + ".txt";
-    var downloadLink = document.createElement("a");
-
-    downloadLink.download = fileNameToSaveAs;
-    downloadLink.innerHTML = "Download File";
-
-    counter += 1;
-    if (window.webkitURL != null)
-    {
-        // Chrome allows the link to be clicked
-        // without actually adding it to the DOM.
-        downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-    }
-    else
-    {
-        // Firefox requires the link to be added to the DOM
-        // before it can be clicked.
-        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-        downloadLink.onclick = destroyClickedElement;
-        downloadLink.style.display = "none";
-        document.body.appendChild(downloadLink);
-    }
-
-    downloadLink.click();
-}
-
-function resetNumber(){
-  counter = 0;
-}
-
-function clearText(){
-  var mididata = document.querySelector('#midi-data ul');
-  while( mididata.firstChild ){
-    mididata.removeChild( mididata.firstChild );
-  }
-  startTime = new Date();
-}
 
 </script>
 
-<title>MIDI Input example</title>
+<title>MIDI data capture</title>
 
 </head>
 
 <body>
 
 <div>
-  <p>Web MIDI API Sample</p>
-  <button onclick="saveTextAsFile()">Save</button>
-
-  <button onclick="clearText()">Clear</button>
+  <button onclick="saveTextAsFile()">Save</button><br/>
+  <button onClick="postMidiData()">Post</button><br/>
+  <button onclick="clearText()">Clear</button><br/>
   <input type="text" id="inputFileNameToSaveAs"/>
+
   <section id="midi-data">  
     <ul></ul>
   </section>
