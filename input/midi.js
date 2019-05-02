@@ -38,6 +38,7 @@ function gotMIDImessage(messageData) {
         newData.push( event.data[i] );
         str += "0x" + event.data[i].toString(16) + " ";
     }
+    str += event.timeStamp;
     arr.push( newData );
 
     newItem.appendChild(document.createTextNode(newText));
