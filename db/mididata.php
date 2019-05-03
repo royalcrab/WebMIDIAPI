@@ -27,15 +27,29 @@ try {
 if (!isset($res) || $res=="") :
     error_log("no data", 3 ,"./error.log");
 else :
-    $buf = "";
-    foreach( $res as $name ){
-        $buf .= $name[1] . "," . $name[2] . "," . $name[3] . "," . $name[4] . "\n";
-    }
-    header('Content-Disposition: attachment; filename="midi.csv"');
-    header('Content-Type: application/octet-stream');
-    header('Content-Transfer-Encoding: binary');
-    header('Content-Length: '.strlen($buf));
+    if ( !isset($_GET['type']) || $_GET['type'] == 'csv')
+        $buf = "";
+        foreach( $res as $name ){
+            $buf .= $name[1] . "," . $name[2] . "," . $name[3] . "," . $name[4] . "\n";
+        }
+        header('Content-Disposition: attachment; filename="midi.csv"');
+        header('Content-Type: application/octet-stream');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Length: '.strlen($buf));
 
-    print $buf;
+        print $buf;
+    }else{
+        $buf = "";
+        // ここにバイナリデータを出力する処理をかく
+//        foreach( $res as $name ){
+//            $buf .= $name[1] . "," . $name[2] . "," . $name[3] . "," . $name[4] . "\n";
+//        }
+        header('Content-Disposition: attachment; filename="midi.csv"');
+        header('Content-Type: application/octet-stream');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Length: '.strlen($buf));
+
+        print $buf;
+    }
 endif
 ?>
