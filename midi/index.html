@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="midi.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+
+<style>
+body {
+    width: 90%;
+    max-width: 640px;
+    margin: 0px auto;
+    padding: 2em;
+    box-sizing: border-box;
+    background: #f2e7d9;
+    font-family: 'Courier', monospace;
+    color: #633645;
+    line-height: 1.3;
+  }
+  body > div {
+    padding: 2em;
+    background: rgba(255, 255, 255, 0.7);
+    border: 0px solid white;
+  }
+
+  h2, p, ul {
+    padding-bottom: 1em;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 2em;
+  }
+
+  p {
+    font-size: 1em;
+  }
+
+  #midi-data {
+    position: relative;
+    overflow: hidden;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(214, 41, 41, 0.7);
+  }
+  #midi-data ul {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    padding: 1em;
+  }
+  #midi-data ul li {
+    padding: 0.2em 0.2em 0.2em 1em;
+    font-size: 1em;
+    font-family: monospace;
+  }
+</style>
+<script>
+
+
+</script>
+
+<title>MIDI data capture</title>
+
+</head>
+
+<body>
+
+<div>
+  <button onclick="saveTextAsFile()">Save</button><br/>
+  <button onClick="postMidiData()">Post</button><br/>
+  <button onclick="clearText()">Clear</button><br/>
+  <input type="text" id="playerName" value="player"/>
+
+  <section id="midi-data">  
+    <ul></ul>
+  </section>
+</div>
+
+    
+    <canvas id="piano" width="600" height="80" style="background-color:white;"></canvas>
+    <script type="text/javascript" src="piano.js"></script>
+
+</body>
+</html>
