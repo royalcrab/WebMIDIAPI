@@ -32,6 +32,8 @@ try {
             error_log($name[0] . "\n", 3 ,"./error.log");
             if ( $name[0] == "") continue;
             echo( '<li> <a download="midi.csv" href="mididata.php?type=csv&name=' . urlencode($name[0]) . '">[CSV]</a> : ' );
+            echo( '<a href="mididata.php?type=txt&name=' . urlencode($name[0]) . '">[TXT]</a> : ' );
+            echo( '<a href="mididata.php?type=hex&name=' . urlencode($name[0]) . '">[HEX]</a> : ' );
             echo( '<a download="midi.mid" href="mididata.php?type=smf&name=' . urlencode($name[0]) . '">[SMF]</a> : ' );
             echo( '<a href="./showdata.php?name=' . urlencode($name[0]) . '">' . $name[0] . "</a></li>\n" );
 //            echo( print_r($name,true) . "<br/>" );
