@@ -3,8 +3,134 @@
 $buf = "";
 $database = "iot";
 $host = "localhost";
-
 require("pw.php");
+
+function control_code( $code )
+{
+    switch( $code ){
+        case 64:
+        return "-pedal-";
+
+        case 88:
+        return "-velocity prefix-";
+
+        default:
+        return $code;
+    }
+}
+
+function note( $code )
+{
+    if ( $code > 107 ){
+        return "NA ";
+    }
+    $oct = floor($code / 12);
+    $note = $code % 12;
+    $buf = "";
+    switch( $note ){
+        case 0:
+        $buf .= "C" . $oct;
+        break;
+
+        case 1:
+        $buf .= "Cs" . $oct;
+        break;
+
+        case 2:
+        $buf .= "D" . $oct;
+        break;
+
+        case 3:
+        $buf .= "Ds" . $oct;
+        break;
+
+        case 4:
+        $buf .= "E" . $oct;
+        break;
+
+        case 5:
+        $buf .= "F" . $oct;
+        break;
+
+        case 6:
+        $buf .= "Fs" . $oct;
+        break;
+
+        case 7:
+        $buf .= "G" . $oct;
+        break;
+
+        case 8:
+        $buf .= "Gs" . $oct;
+        break;
+
+        case 9:
+        $buf .= "A" . $oct;
+        break;
+
+        case 10:
+        $buf .= "As" . $oct;
+        break;
+
+        case 11:
+        $buf .= "B" . $oct;
+        break;
+
+        default:
+        $buf .= "NA ";
+        break;
+    }
+
+    return $buf;
+}
+
+
+function code( $time, $code1, $code2, $code3 )
+{
+    $buf = "[" . $time . "] ";
+    $buf = "ch" . ($code1 & 0x0f) . " ";
+    switch( $code1 & 0xf0){
+        case 0x80:
+        $buf .= "NOTE OFF   :" . note( $code2 ) . " (0x" . dechex( $code2) . ") "  . $code3 . " (0x" . dechex( $code3) . ")";
+        break;
+
+        case 0x90:
+        $buf .= "NOTE ON    :" . note( $code2 ) . " (0x" . dechex( $code2) . ") "  . $code3 . " (0x" . dechex( $code3) . ")";
+        break;
+
+        case 0xA0: 
+        $buf .= "AFTER TOUCH:" . note( $code2 ) . " (0x" . dechex( $code2) . ") "  . $code3 . " (0x" . dechex( $code3) . ")";
+        break;
+
+        case 0xB0:
+        $buf .= "CONTROL    :" . control_code($code2) . " (0x" . dechex( $code2 ) . ") "  . $code3 . " (0x" . dechex( $code3) . ")";
+        break;
+
+        case 0xC0:
+        $buf .= "PROGRAM CHNG:" . $code2 . " (0x" . dechex( $code2 ) . ") "  . $code3 . " (0x" . dechex( $code3) . ")";
+        break;
+
+        case 0xD0:
+        $buf .= "KEY PRESSUER:" . $code2 . " (0x" . dechex( $code2 ) . ") ";
+        break;
+
+        case 0xE0:
+        $buf .= "PITCH BEND  :" . $code2 . " (0x" . dechex( $code2 ) . ") "  . $code3 . " (0x" . dechex( $code3) . ")";
+        break;
+
+        case 0xF0:
+        $buf .= "SYSTEM      :" . $code2 . " (0x" . dechex( $code2 ) . ") "  . $code3 . " (0x" . dechex( $code3) . ")";
+        break;
+
+        default:
+        $buf .= "UNKNOWN ----:" . $code1 . " (0x" . dechex( $code1 ) . ") " . $code2 . " (0x" . dechex( $code2 ) . ") "  . $code3 . " (0x" . dechex( $code3) . ")";
+        break;
+    }
+
+    return $buf;
+}
+
+
 
 
 if(isset($_GET['name'])) {
@@ -37,7 +163,7 @@ if (!isset($res) || $res==""){
         header('Content-Disposition: attachment; filename="midi.csv"');
         header('Content-Type: application/octet-stream');
         header('Content-Transfer-Encoding: binary');
-//        header('Content-Length: '.strlen($buf));
+        header('Content-Length: '.strlen($buf));
 
         print $buf;
     }else if ( !isset($_GET['type']) || $_GET['type'] == 'txt'){
@@ -54,10 +180,19 @@ if (!isset($res) || $res==""){
             echo $name[1] . "," . dechex($name[2]) . "," . dechex($name[3]) . "," . dechex($name[4]) . "\n";
         }
 
+    } if ( !isset($_GET['type']) || $_GET['type'] == 'note'){
+        header( 'Content-Type: text/plain' );
+
+        foreach( $res as $name ){
+            echo code( $name[1], $name[2] ,  $name[3] ,  $name[4] ) . "\n";
+        }
+
     }else{
 
-        $buf = pack("CCCCCCCCCCCCCCCCCC", 0x4d, 0x54, 0x68, 0x64, 0, 0, 0, 6, 0, 0, 0, 1, 0, 0x78, 0x4d, 0x54, 0x72, 0x6b);
+        $buf = pack("CCCCCCCCCCCCCCCCCC", 0x4d, 0x54, 0x68, 0x64, 0, 0, 0, 6, 0, 0, 0, 1, 0x1, 0xf6, 0x4d, 0x54, 0x72, 0x6b);
+        // 0x10f: 1/4 note = 252 (for synthesia, which requires a number that can be divided by 3.)
 
+//        $dat = pack( "CCCCCC", 0xff, 0x51 ,0x03, 0x03, 0xD0, 0x96);
         $dat = "";
 
 //        foreach ( $header as $data ){

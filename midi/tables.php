@@ -5,7 +5,7 @@ $host = "localhost";
 require("pw.php");
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=iot;charset=utf8',$user,$pw,array(PDO::ATTR_EMULATE_PREPARES => false));
-    $res = $pdo->query( 'select distinct name from mididata order by name desc;' );
+    $res = $pdo->query( 'select distinct x.name from (select id,name from mididata order by id asc) as x;' );
 /*    while( ( $db = $dbs->fetchColumn( 0 ) ) !== false )
     {
         echo $db.'<br>';
@@ -23,7 +23,7 @@ try {
 </head>
 <body>
   <?php if (!isset($res) || $res=="") : ?>
-  <?php error_log("no data", 3 ,"./error.log"); ?>
+  <?php error_log("no data\n", 3 ,"./error.log"); ?>
   <?php else : ?>
     <p>
         <ul id="table_names">
@@ -34,6 +34,7 @@ try {
             echo( '<li> <a download="midi.csv" href="mididata.php?type=csv&name=' . urlencode($name[0]) . '">[CSV]</a> : ' );
             echo( '<a href="mididata.php?type=txt&name=' . urlencode($name[0]) . '">[TXT]</a> : ' );
             echo( '<a href="mididata.php?type=hex&name=' . urlencode($name[0]) . '">[HEX]</a> : ' );
+            echo( '<a href="mididata.php?type=note&name=' . urlencode($name[0]) . '">[NOTE]</a> : ' );
             echo( '<a download="midi.mid" href="mididata.php?type=smf&name=' . urlencode($name[0]) . '">[SMF]</a> : ' );
             echo( '<a href="./showdata.php?name=' . urlencode($name[0]) . '">' . $name[0] . "</a></li>\n" );
 //            echo( print_r($name,true) . "<br/>" );
