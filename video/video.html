@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset=utf-8>
+<title>Video with MIDI</title>
+<script src="data.js"></script>
+</head>
+<body onLoad="getDuration()">
+	<table><tr><td>
+<video id="video" width="640" controls>
+<source src="piano2hh.mp4">
+</video></td><td>
+<div style="width:400px; background-color:#333333; color:#ffffff;">
+<input type="button" value="再生" onClick="playVideo()">
+<input type="button" value="一時停止" onClick="pauseVideo()">
+<input type="button" value="前" onClick="downVolume()">
+<input type="button" value="後" onClick="upVolume()">
+<input type="button" value="1秒前" onClick="seekDown()">
+<input type="button" value="1秒後" onClick="seekUp()">
+<br>
+<input type="button" value="+0.1倍" onClick="slow()">
+<input type="button" value="-0.1倍" onClick="fast()">
+<br>
+現在（秒）：<span id="ichi">0</span><br>
+全体（秒）：<span id="nagasa"></span><br>
+再生速度  ：<span id="speed">1.0</span><br>
+<span id="kanryou"></span>
+</div>
+</Td></tr></table>
+<canvas id="roll" width="1000" height="380"></canvas>
+<script src="./roll.js"></script>
+<hr/>
+(c) royalcrab 2019.
+
+</body> 
+</html>
