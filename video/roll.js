@@ -165,15 +165,30 @@ function displayRoll( dat, dataMin, dataMax, current ){
         }
     }
     console.log( "dataMin: " + dataMin + ", dataMax: " + dataMax );
+    
+    ctx.font = "10px 'arial'";
     ctx.strokeStyle = "gray";
+    ctx.fillStyle = "white";
+
     var sx = Math.floor( (dataMin + 999 ) / 1000 );
     var ex = Math.floor( dataMax / 1000 );
     for ( ; sx < ex+1; sx+=1){
-        console.log( sx*rate*1000 + "," + ex*rate*1000);
+
+//        console.log( sx*rate*1000 + "," + ex*rate*1000);
+        var lineposx = keyOffsetLeft + keyWidth + 1 + (sx*1000-dataMin)*rate;
         ctx.beginPath();
-        ctx.moveTo( keyOffsetLeft + keyWidth + 1 + (sx*1000-dataMin)*rate, keyOffsetTop);
-        ctx.lineTo( keyOffsetLeft + keyWidth + 1 + (sx*1000-dataMin)*rate, keyOffsetTop + keyAllHeight);
+        ctx.moveTo( lineposx, keyOffsetTop);
+        ctx.lineTo( lineposx, keyOffsetTop + keyAllHeight);
         ctx.stroke();
+
+        if ( rate*1000 > 20 ){
+            ctx.fillText( sx*1000, lineposx, 10 ); // msec
+        }else if ( rate*1000 > 10 && sx % 5 == 0 ){
+            ctx.fillText( sx*1000, lineposx, 10 ); // msec 
+        }else if ( sx % 10 == 0 ){
+            ctx.fillText( sx*1000, lineposx, 10 ); // msec 
+        }
+
     }
 
 //    console.log( current );
@@ -184,6 +199,8 @@ function displayRoll( dat, dataMin, dataMax, current ){
     ctx.moveTo( keyOffsetLeft + keyWidth + 1 + cx , keyOffsetTop);
     ctx.lineTo( keyOffsetLeft + keyWidth + 1 + cx , keyOffsetTop + keyAllHeight);
     ctx.stroke();
+
+    
 
     preCurrent = current;
 }
