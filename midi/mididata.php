@@ -131,8 +131,6 @@ function code( $time, $code1, $code2, $code3 )
 }
 
 
-
-
 if(isset($_GET['name'])) {
     $tableName = urldecode($_GET['name']);
     error_log( "table:" . $tableName . "\n", 3, "./error.log");
@@ -141,6 +139,9 @@ if(isset($_GET['name'])) {
     exit(-1);
 }
 
+$filename = str_replace( '/', '_', $tableName  );
+$filename = str_replace( ' ', '_', $filename );
+$filename = str_replace( ':', '_', $filename );
 
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=iot;charset=utf8',$user,$pw,array(PDO::ATTR_EMULATE_PREPARES => false));
@@ -160,7 +161,7 @@ if (!isset($res) || $res==""){
         foreach( $res as $name ){
             $buf .= $name[1] . "," . $name[2] . "," . $name[3] . "," . $name[4] . "\n";
         }
-        header('Content-Disposition: attachment; filename="midi.csv"');
+        header('Content-Disposition: attachment; filename="' . $filename . '.csv"');
         header('Content-Type: application/octet-stream');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: '.strlen($buf));
@@ -190,6 +191,17 @@ if (!isset($res) || $res==""){
         }
 
         echo "null ]}\n";
+
+    } else if ( !isset($_GET['type']) || $_GET['type'] == 'js'){
+        header( 'Content-Type: text/plain' );
+
+        echo( 'var data = [' . "\n");
+
+        foreach( $res as $name ){
+            echo '{ "time": "' . $name[1] . '", "c1": "' . $name[2] . '", "c2": "' . $name[3] . '", "c3": "' . $name[4] . '"' . "},\n";
+        }
+
+        echo "null ];\n";
 
     } else if ( !isset($_GET['type']) || $_GET['type'] == 'note'){
         header( 'Content-Type: text/plain' );
@@ -241,7 +253,9 @@ if (!isset($res) || $res==""){
 //            fwrite( $fp, $buf . $cdat . $dat );
 //            fclose( $fp );
 
-            header('Content-Disposition: attachment; filename="midi.mid"');
+
+
+            header('Content-Disposition: attachment; filename="' . $filename . '.mid"');
             header('Content-Type: application/octet-stream');
             header('Content-Transfer-Encoding: binary');
             header('Content-Length: '.strlen($buf . $cdat . $dat ));

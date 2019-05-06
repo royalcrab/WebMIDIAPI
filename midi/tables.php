@@ -36,6 +36,7 @@ try {
             echo( '<a href="mididata.php?type=hex&name=' . urlencode($name[0]) . '">hex</a> : ' );
             echo( '<a href="mididata.php?type=note&name=' . urlencode($name[0]) . '">note</a> : ' );
             echo( '<a href="mididata.php?type=json&name=' . urlencode($name[0]) . '">json</a> : ' );
+            echo( '<a href="mididata.php?type=js&name=' . urlencode($name[0]) . '">js</a> : ' );
             echo( '<a download="midi.mid" href="mididata.php?type=smf&name=' . urlencode($name[0]) . '">smf</a> : ' );
             echo( '<a href="./showdata.php?name=' . urlencode($name[0]) . '">' . $name[0] . "</a></li>\n" );
 //            echo( print_r($name,true) . "<br/>" );
