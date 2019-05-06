@@ -6,11 +6,55 @@ var dmax = 45000;
 const songMax = 45000;
 var preCurrent = 0;
 
+const rollWidth = 900;
+const keyWidth = 20;
+const keyHeight = 4;
+const keyOffsetLeft = 10;
+const keyOffsetTop = 0;
+const keyAllHeight = 400;
+
 function init(){
 
     canvas = document.getElementById("roll");
     if ( ! canvas || ! canvas.getContext ) { return false; }
     ctx = canvas.getContext('2d');
+
+    var changeCurrent = function(e){
+        var rect = e.target.getBoundingClientRect();
+
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
+
+        x -= keyOffsetLeft + keyWidth + 1;
+
+        var seekPoint = x * (dmax - dmin) / rollWidth + dmin;
+        console.log( "x, seekPoint = " +  x + "," + seekPoint );
+
+        if ( seekPoint > songMax ) return;
+        if ( v != null ){
+            v.currentTime = seekPoint / 1000;
+            drawRoll(data, dmin, dmax, seekPoint);
+        }
+    }
+
+    // ラインを動かしたらその位置にシークする
+    var isMoving = false;
+    canvas.onmousedown = (function(e){
+        isMoving = true;
+        changeCurrent(e);
+    });
+    canvas.onmouseup = (function(e){
+        isMoving = false;
+    });
+    canvas.onmouseleave = (function(e){
+        isMoving = false;
+    });
+    canvas.onmousemove = (function(e){
+        if ( isMoving == true ){
+            changeCurrent(e);
+        }
+    });
+
     v = document.getElementById("video");
     drawRoll(data, dmin, dmax, 0);
 }
@@ -104,20 +148,22 @@ function slow() {
     v.playbackRate += 0.1;
 }
 
+function setSpeed( speed ) {
+    if ( speed < 0.1 ){
+        speed = 0.1;
+    }
+    v.playbackRate = speed;
+}
+
 function fast() {
     if ( v.playbackRate > 0.1){
         v.playbackRate -= 0.1;
     }
 }
 
-const rollWidth = 900;
-const keyWidth = 20;
-const keyHeight = 4;
-const keyOffsetLeft = 10;
-const keyOffsetTop = 0;
-const keyAllHeight = 400;
 
-const rollOffsetLeft = 100; // roll の左端の座標
+
+//const rollOffsetLeft = 100; // roll の左端の座標
 function displayRoll( dat, dataMin, dataMax, current ){
     var rate = rollWidth / (dataMax - dataMin) ;
     // データの最小分解能
@@ -164,7 +210,7 @@ function displayRoll( dat, dataMin, dataMax, current ){
             }
         }
     }
-    console.log( "dataMin: " + dataMin + ", dataMax: " + dataMax );
+//    console.log( "dataMin: " + dataMin + ", dataMax: " + dataMax );
     
     ctx.font = "10px 'arial'";
     ctx.strokeStyle = "gray";
@@ -199,8 +245,6 @@ function displayRoll( dat, dataMin, dataMax, current ){
     ctx.moveTo( keyOffsetLeft + keyWidth + 1 + cx , keyOffsetTop);
     ctx.lineTo( keyOffsetLeft + keyWidth + 1 + cx , keyOffsetTop + keyAllHeight);
     ctx.stroke();
-
-    
 
     preCurrent = current;
 }
