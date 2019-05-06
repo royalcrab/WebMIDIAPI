@@ -180,7 +180,18 @@ if (!isset($res) || $res==""){
             echo $name[1] . "," . dechex($name[2]) . "," . dechex($name[3]) . "," . dechex($name[4]) . "\n";
         }
 
-    } if ( !isset($_GET['type']) || $_GET['type'] == 'note'){
+    }else if ( !isset($_GET['type']) || $_GET['type'] == 'json'){
+        header( 'Content-Type: text/plain' );
+
+        echo( '{"data" : [' . "\n");
+
+        foreach( $res as $name ){
+            echo '{ "time": "' . $name[1] . '", "c1": "' . $name[2] . '", "c2": "' . $name[3] . '", "c3": "' . $name[4] . '"' . "},\n";
+        }
+
+        echo "null ]}\n";
+
+    } else if ( !isset($_GET['type']) || $_GET['type'] == 'note'){
         header( 'Content-Type: text/plain' );
 
         foreach( $res as $name ){
