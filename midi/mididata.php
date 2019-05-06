@@ -205,7 +205,7 @@ if (!isset($res) || $res==""){
         foreach( $res as $name ){
             $time = $name[1] - $pre;
             if ( $pre == 0){
-                $time = 1000;
+                $time = 252*4;
             }
 
             if ( $time > 0x7f ){ // ignore over 0x3fff time

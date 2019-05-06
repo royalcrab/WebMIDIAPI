@@ -7,8 +7,8 @@
 
 <style>
 body {
-    width: 90%;
-    max-width: 640px;
+    width: 800px;
+    max-width: 900px;
     margin: 0px auto;
     padding: 2em;
     box-sizing: border-box;
@@ -16,6 +16,7 @@ body {
     font-family: 'Courier', monospace;
     color: #633645;
     line-height: 1.3;
+    user-select: none;
   }
   body > div {
     padding: 2em;
@@ -39,6 +40,7 @@ body {
   #midi-data {
     position: relative;
     overflow: hidden;
+    width: 600px;
     height: 300px;
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(214, 41, 41, 0.7);
@@ -54,6 +56,8 @@ body {
     font-size: 1em;
     font-family: monospace;
   }
+
+ 
 </style>
 <script>
 
@@ -67,9 +71,15 @@ body {
 <body>
 
 <div>
+  <p>
   <button onclick="saveTextAsFile()">Save</button><br/>
+  </p>
+  <p>
   <button onClick="postMidiData()">Post</button><br/>
+  </p>
+  <p>
   <button onclick="clearText()">Clear</button><br/>
+  </p>
   <input type="text" id="playerName" value="player"/>
 
   <section id="midi-data">  

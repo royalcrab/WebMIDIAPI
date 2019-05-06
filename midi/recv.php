@@ -17,12 +17,13 @@ try {
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $json_string = file_get_contents('php://input') ; ## This time Kimo
 
-    $data = json_decode($json_string);
+//    $data = json_decode($json_string);
     error_log($json_string, 3, "./error.log" );
     if ( $data->midi == null ){
         error_log("NULL\n", 3, "./error.log");
     }else{
         error_log("MIDI: \n", 3, "./error.log");
+        $date = date("Y-m-d H:i:s");
         foreach ($data->midi as $value) {
 //            error_log(print_r($value, true), 3, "./error.log" );
 
@@ -36,8 +37,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $cmd = "INSERT INTO `mididata` (`id`, `time`, `c1`, `c2`, `c3`, `name`)";
             $cmd .= " VALUES (NULL, '" . $time . "', '" . $m2 . "', '" . $m3 . "', '" . $m4 . "', '" . $data->name . "'); ";
+            $pdo->query( $cmd );
 
-            error_log($cmd . "\n", 3, "./error.log" );
+// 2009-08-25 11:38:23
+//            $cmd = "INSERT INTO `mididata2` (`id`, `time`, `c1`, `c2`, `c3`, `name`, `stampe`)";
+//            $cmd .= " VALUES (NULL, '" . $time . "', '" . $m2 . "', '" . $m3 . "', '" . $m4 . "', '" . $data->name . "', cast('" . $date . "' as datetime)); ";
+
+//            error_log($cmd . "\n", 3, "./error.log" );
 
             $pdo->query( $cmd );
 
