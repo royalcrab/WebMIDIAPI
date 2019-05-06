@@ -1,6 +1,10 @@
 var canvas;
 var ctx;
 var v;
+var dmin = 0;
+var dmax = 45000;
+const songMax = 45000;
+var preCurrent = 0;
 
 function init(){
 
@@ -8,7 +12,7 @@ function init(){
     if ( ! canvas || ! canvas.getContext ) { return false; }
     ctx = canvas.getContext('2d');
     v = document.getElementById("video");
-    drawRoll();
+    drawRoll(data, dmin, dmax, 0);
 }
 
 function getDuration() {
@@ -25,13 +29,14 @@ function playVideo() {
     v.addEventListener("timeupdate", function(){
         document.getElementById("ichi").innerHTML = v.currentTime;
         document.getElementById("speed").innerHTML = v.playbackRate;
+        drawRoll( data, dmin, dmax, v.currentTime * 1000 );
     }, false);
     //再生完了を知らせる
     v.addEventListener("ended", function(){
         document.getElementById("kanryou").innerHTML = "動画の再生が完了しました。";
     }, false);
 
-    drawRoll();
+   
 }
 
 function pauseVideo() {
@@ -49,6 +54,47 @@ function downVolume() {
 function seekUp() {
     v.currentTime += 1;
 }
+
+function scaleUp() {
+    var tmpMax = (dmax - dmin) * 2 + dmin;
+    if ( tmpMax > songMax ) tmpMax = songMax;
+    dmax = tmpMax;
+    drawRoll(data, dmin, dmax, preCurrent);
+}
+
+function scaleDown() {
+    var tmpMax = (dmax - dmin) / 2;
+    if ( tmpMax < 2000 ) tmpMax = 2000;
+    dmax = tmpMax + dmin;
+    drawRoll(data, dmin, dmax, preCurrent);
+}
+
+function pageUp() {
+    var tmp = (dmax - dmin) * 3 / 4;
+    var range = dmax - dmin;
+    if ( dmin + tmp + range > songMax){
+        dmin = songMax - range;
+        dmax = songMax;
+    }else{
+        dmin += tmp;
+        dmax += tmp;
+    }
+    drawRoll(data, dmin, dmax, preCurrent);
+}
+
+function pageDown() {
+    var tmp = (dmax - dmin) * 3 / 4;
+    if ( dmin - tmp < 0){
+        var range = dmax - dmin;
+        dmin = 0;
+        dmax = range;
+    }else{
+        dmin -= tmp;
+        dmax -= tmp;
+    }
+    drawRoll(data, dmin, dmax, preCurrent);
+}
+
 
 function seekDown() {
     v.currentTime -= 1;
@@ -72,7 +118,7 @@ const keyOffsetTop = 0;
 const keyAllHeight = 400;
 
 const rollOffsetLeft = 100; // roll の左端の座標
-function displayRoll( dat, dataMin, dataMax ){
+function displayRoll( dat, dataMin, dataMax, current ){
     var rate = rollWidth / (dataMax - dataMin) ;
     // データの最小分解能
 
@@ -118,16 +164,28 @@ function displayRoll( dat, dataMin, dataMax ){
             }
         }
     }
+    console.log( "dataMin: " + dataMin + ", dataMax: " + dataMax );
     ctx.strokeStyle = "gray";
     var sx = Math.floor( (dataMin + 999 ) / 1000 );
     var ex = Math.floor( dataMax / 1000 );
     for ( ; sx < ex+1; sx+=1){
-//        console.log( sx*rate*1000 + "," + ex*rate*1000);
+        console.log( sx*rate*1000 + "," + ex*rate*1000);
         ctx.beginPath();
-        ctx.moveTo( keyOffsetLeft + keyWidth + 1 + sx*rate*1000, keyOffsetTop);
-        ctx.lineTo( keyOffsetLeft + keyWidth + 1 + sx*rate*1000, keyOffsetTop + keyAllHeight);
+        ctx.moveTo( keyOffsetLeft + keyWidth + 1 + (sx*1000-dataMin)*rate, keyOffsetTop);
+        ctx.lineTo( keyOffsetLeft + keyWidth + 1 + (sx*1000-dataMin)*rate, keyOffsetTop + keyAllHeight);
         ctx.stroke();
     }
+
+//    console.log( current );
+    ctx.strokeStyle = "red";
+    var cx = (current - dataMin) * rate;
+    if ( cx < 0 ) return;
+    ctx.beginPath();
+    ctx.moveTo( keyOffsetLeft + keyWidth + 1 + cx , keyOffsetTop);
+    ctx.lineTo( keyOffsetLeft + keyWidth + 1 + cx , keyOffsetTop + keyAllHeight);
+    ctx.stroke();
+
+    preCurrent = current;
 }
 
 
@@ -138,7 +196,7 @@ var keyH = [
     1.5, 1, 2,   1, 1.5, 1.5, 1,   2, 1, 2,   1, 1.5
 ];
 
-function drawRoll()
+function drawRoll(data, dmin, dmax, current)
 {
     ctx.fillStyle = "gray";
     ctx.fillRect( 0, 0, canvas.clientWidth, canvas.clientHeight );
@@ -175,7 +233,7 @@ function drawRoll()
     }
 
     if ( data != null ){
-        displayRoll( data, 0, 45000 );
+        displayRoll( data, dmin, dmax, current );
     }
 }
 

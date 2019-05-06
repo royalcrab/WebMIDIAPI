@@ -10,16 +10,22 @@
 <video id="video" width="640" controls>
 <source src="piano2hh.mp4">
 </video></td><td>
-<div style="width:400px; background-color:#333333; color:#ffffff;">
+<div style="width:320px; background-color:#333333; color:#ffffff;">
 <input type="button" value="再生" onClick="playVideo()">
-<input type="button" value="一時停止" onClick="pauseVideo()">
+<input type="button" value="一時停止" onClick="pauseVideo()"> <br>
 <input type="button" value="前" onClick="downVolume()">
-<input type="button" value="後" onClick="upVolume()">
+<input type="button" value="後" onClick="upVolume()"> <br>
 <input type="button" value="1秒前" onClick="seekDown()">
 <input type="button" value="1秒後" onClick="seekUp()">
 <br>
 <input type="button" value="+0.1倍" onClick="slow()">
 <input type="button" value="-0.1倍" onClick="fast()">
+<br>
+<input type="button" value="縮小" onClick="scaleUp()">
+<input type="button" value="拡大" onClick="scaleDown()">
+<br>
+<input type="button" value="前譜面" onClick="pageDown()">
+<input type="button" value="次譜面" onClick="pageUp()">
 <br>
 現在（秒）：<span id="ichi">0</span><br>
 全体（秒）：<span id="nagasa"></span><br>
