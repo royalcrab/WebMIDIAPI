@@ -198,7 +198,8 @@ if (!isset($res) || $res==""){
         echo( 'var data = [' . "\n");
 
         foreach( $res as $name ){
-            echo '{ "time": "' . $name[1] . '", "c1": "' . $name[2] . '", "c2": "' . $name[3] . '", "c3": "' . $name[4] . '"' . "},\n";
+            $offset = 0;
+            echo '{ "time": "' . ($name[1]-$offset) . '", "c1": "' . $name[2] . '", "c2": "' . $name[3] . '", "c3": "' . $name[4] . '"' . "},\n";
         }
 
         echo "null ];\n";
@@ -226,6 +227,7 @@ if (!isset($res) || $res==""){
         $count = 0;
         $pre = 0;
         foreach( $res as $name ){
+            if ( $name[2] == 0xfe ) continue;
             $time = $name[1] - $pre;
             if ( $pre == 0){
                 $time = 252*4;
