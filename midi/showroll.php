@@ -11,6 +11,12 @@ echo '<script src="mididata.php?type=js&name=' . $tableName . '"></script>';
 echo <<< HOGE
 <canvas id="roll" width="1000" height="380"></canvas>
 <script src="pianoroll.js"></script>
+<br>
+<input type="button" value="縮小" onClick="scaleUp()">
+<input type="button" value="拡大" onClick="scaleDown()">
+<br>
+<input type="button" value="前譜面" onClick="pageDown()">
+<input type="button" value="次譜面" onClick="pageUp()">
 HOGE;
 
 ?>

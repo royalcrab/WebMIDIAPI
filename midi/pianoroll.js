@@ -3,7 +3,7 @@ var ctx;
 var v;
 var dmin = 0;
 var dmax = 45000;
-const songMax = 45000;
+var songMax = 45000;
 var preCurrent = 0;
 
 const rollWidth = 900;
@@ -19,6 +19,19 @@ function init(){
     if ( ! canvas || ! canvas.getContext ) { return false; }
     ctx = canvas.getContext('2d');
 
+    var min = 10000000;
+    var max = 0;
+    if ( data != null && data != undefined ){
+        for ( var i in data ){
+            var d = data[i];
+            if ( d == null ) continue;
+            if ( min > d.time ) min = d.time;
+            if ( max < d.time ) max = d.time;
+        }
+    }
+    dmin = 0;
+    songMax = max + 1000;
+
     var changeCurrent = function(e){
         var rect = e.target.getBoundingClientRect();
 
@@ -33,8 +46,8 @@ function init(){
         if ( seekPoint > songMax ) return;
         if ( v != null ){
             v.currentTime = seekPoint / 1000;
-            drawRoll(data, dmin, dmax, seekPoint);
         }
+        drawRoll(data, dmin, dmax, seekPoint);
     }
 
     // ラインを動かしたらその位置にシークする
@@ -139,7 +152,6 @@ function pageDown() {
     drawRoll(data, dmin, dmax, preCurrent);
 }
 
-
 function seekDown() {
     v.currentTime -= 1;
 }
@@ -173,6 +185,8 @@ function displayRoll( dat, dataMin, dataMax, current ){
     
     for( var i = 0; i < dat.length; i++ ){
         // 範囲外なら表示しない
+        if ( dat[i] == null ) continue;
+
         var ict = parseInt(dat[i].time);
         var ic1 = parseInt(dat[i].c1);
         var ic2 = parseInt(dat[i].c2);
@@ -183,6 +197,8 @@ function displayRoll( dat, dataMin, dataMax, current ){
         // note on の場合は対応する note off を探す。なければとりあえず右端まで引く
         if ( ic1 == 0x90 && ic3 > 0 ){
             for( var j = i+1; j < dat.length; j++ ){
+
+                if ( dat[j] == null ) continue;
 
                 var jct = parseInt(dat[j].time);
                 var jc1 = parseInt(dat[j].c1);
@@ -218,7 +234,12 @@ function displayRoll( dat, dataMin, dataMax, current ){
 
     var sx = Math.floor( (dataMin + 999 ) / 1000 );
     var ex = Math.floor( dataMax / 1000 );
-    for ( ; sx < ex+1; sx+=1){
+    var inc = 1;
+
+    if ( rate*1000 < 21 ) inc = 5;
+    if ( rate*1000 < 11 ) inc = 10;
+    if ( rate*1000 < 6 ) inc = 50;
+    for ( ; sx < ex+1; sx+=inc){
 
 //        console.log( sx*rate*1000 + "," + ex*rate*1000);
         var lineposx = keyOffsetLeft + keyWidth + 1 + (sx*1000-dataMin)*rate;
@@ -231,7 +252,9 @@ function displayRoll( dat, dataMin, dataMax, current ){
             ctx.fillText( sx*1000, lineposx, 10 ); // msec
         }else if ( rate*1000 > 10 && sx % 5 == 0 ){
             ctx.fillText( sx*1000, lineposx, 10 ); // msec 
-        }else if ( sx % 10 == 0 ){
+        }else if ( rate*1000 > 5 && sx % 10 == 0 ){
+            ctx.fillText( sx*1000, lineposx, 10 ); // msec 
+        }else if ( sx % 50 == 0 ){
             ctx.fillText( sx*1000, lineposx, 10 ); // msec 
         }
 
