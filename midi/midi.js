@@ -18,6 +18,7 @@ function onMIDISuccess(midiData) {
     // this is all our MIDI data
     midi = midiData;
     var allInputs = midi.inputs.values();
+    console.log(JSON.stringify(allInputs));
     // loop over all available inputs and listen for any MIDI input
     for (var input = allInputs.next(); input && !input.done; input = allInputs.next()) {
         // when a MIDI value is received call the onMIDIMessage function
