@@ -5,6 +5,17 @@ $database = "iot";
 $host = "localhost";
 require("pw.php");
 
+/* データベースは下記を想定しているが、name みたいな属性をあとで入れるかも。
+    CREATE TABLE `mididata` (
+    `id` int(11) NOT NULL,
+    `time` int(24) NOT NULL,
+    `c1` int(11) NOT NULL,
+    `c2` int(11) NOT NULL DEFAULT '0',
+    `c3` int(11) NOT NULL DEFAULT '0',
+    `name` varchar(100) NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+*/
+
 function control_code( $code )
 {
     switch( $code ){
@@ -193,6 +204,7 @@ if (!isset($res) || $res==""){
         echo "null ]}\n";
 
     } else if ( !isset($_GET['type']) || $_GET['type'] == 'js'){
+        // javascript のコード(配列)として出力する。最後に null を追加しているところに注意
         header( 'Content-Type: text/plain' );
 
         echo( 'var data = [' . "\n");
@@ -215,58 +227,57 @@ if (!isset($res) || $res==""){
 
         $buf = pack("CCCCCCCCCCCCCCCCCC", 0x4d, 0x54, 0x68, 0x64, 0, 0, 0, 6, 0, 0, 0, 1, 0x1, 0xf6, 0x4d, 0x54, 0x72, 0x6b);
         // 0x10f: 1/4 note = 252 (for synthesia, which requires a number that can be divided by 3.)
+        // SMF 0 のファイルヘッダを生成している。かなり適当なため、再生ソフトによっては読みこんでくれないことも多い。
+        // QuickTime と Windows Media Player は読んでくれなかった。
+        // Logic X pro と Garageband は読んでくれる。VLC player, Sekaiju なども読んでくれる。
+        // VLC Player は何でも無理矢理よんでくれるようだ。他のソフトは分解能を 3 で割りきれる数にしないと読んでくれないぽい。
+        // デフォルトのテンプが 120bpm になるので、四分音符の長さを 250 にすると全音符が 100ms になり、実データにあう。
+        // しかし、player が 3 で割る数を求めるので、 4 分音符の 252 を指定している。このため 1000ms あたり 8 ms だけ音がずれる。
+        // ずれないようにするには 250 を指定するか。時刻に 1.008 を乗じるなどの対がg必要になる。
+        // MIDI データ的には四分音符を 192 とかにするのが良いようなので、0.968 を乗じて 192 を指定すて時刻を合わせるのが本来いいのかも。
 
 //        $dat = pack( "CCCCCC", 0xff, 0x51 ,0x03, 0x03, 0xD0, 0x96);
         $dat = "";
 
-//        foreach ( $header as $data ){
-//            $buf .= pack("C", $data );
-//        }
-
-        // ここにバイナリデータを出力する処理をかく
+        // ここから SMF のトラックのバイナリデータを出力している
         $count = 0;
         $pre = 0;
         foreach( $res as $name ){
             if ( $name[2] == 0xfe ) continue;
+            // 0xfe は MIDI 機器の ping 応答のようなもので、これが SMF に入ってると再生できないソフトがあるぽい。
+            // そのため、このコマンドは無視している。
             $time = $name[1] - $pre;
             if ( $pre == 0){
                 $time = 252*4;
             }
 
-            if ( $time > 0x7f ){ // ignore over 0x3fff time
+            if ( $time > 0x7f ){ // ignore over 0x3fff time。3fff 以上の時刻データがきたら 0x3fff に丸めている。
                 $dat .= pack( "CC", (($time >> 7) & 0x7f) | 0x80,  $time & 0x7f );
                 $count += 5;
             }else{
                 $dat .= pack( "C", $time);
                 $count += 4;
-            }
+            } // 4 byte 以上のコマンドは無視している。もし MIDI 機器から送られてきていたらバグるはず。
             $dat .= pack( "CCC", $name[2] , $name[3] , $name[4] );
 
 
             $pre = $name[1];
         }
 
-//        $fp = fopen( "dat/tmp.mid", "w");
-//        if ( $fp == false ){
-//            error_log( "dat/tmp.mid can not be opend.\n");
-//        }else{
-            $cdat = pack("N", $count );
+        $cdat = pack("N", $count );
+        // MIDI データの長さ(バイト数)をあとから計算している。
 
-//            fwrite( $fp, $buf . $cdat . $dat );
-//            fclose( $fp );
+        // この php を参照する a タグに download 属性をつけておくことを推奨
+        // <a download="midi.mid" href="mididata.php?type=smf&name="hoge">smf</a>
+        // こんな感じで
+        header('Content-Disposition: attachment; filename="' . $filename . '.mid"'); // なくても動く
+        header('Content-Type: application/octet-stream'); // ないと動かない
+        header('Content-Transfer-Encoding: binary'); // ないと動かない
+        header('Content-Length: '.strlen($buf . $cdat . $dat )); // なくても動くが、あるとダウンロードの経過が表示される、ことがある
 
+        echo $buf . $cdat. $dat;
+        // ヘッダ、データ長、データ部の順で出する。
 
-
-            header('Content-Disposition: attachment; filename="' . $filename . '.mid"');
-            header('Content-Type: application/octet-stream');
-            header('Content-Transfer-Encoding: binary');
-            header('Content-Length: '.strlen($buf . $cdat . $dat ));
-    
-            //((($count >> 24) & 0x000000ff) | (($count >> 8) & 0x0000ff00) | (($count << 8 ) & 0x00ff0000) | (($count << 24) & 0xff000000)));
-            echo $buf . $cdat. $dat;
-
-//            readfile("dat/tmp.mid");
-//        }
     }
-}
+} // このファイルの先頭や末尾に空白とか何か文字が入っていると、それがバイナリの先頭に出力されてしまう。注意!
 ?>

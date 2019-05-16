@@ -6,6 +6,16 @@ require("pw.php");
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=iot;charset=utf8',$user,$pw,array(PDO::ATTR_EMULATE_PREPARES => false));
     $res = $pdo->query( 'select distinct x.name from (select id,name from mididata order by id asc) as x;' );
+    /* データベースは下記の構造を想定
+    CREATE TABLE `mididata` (
+      `id` int(11) NOT NULL,
+      `time` int(24) NOT NULL,
+      `c1` int(11) NOT NULL,
+      `c2` int(11) NOT NULL DEFAULT '0',
+      `c3` int(11) NOT NULL DEFAULT '0',
+      `name` varchar(100) NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    */
 /*    while( ( $db = $dbs->fetchColumn( 0 ) ) !== false )
     {
         echo $db.'<br>';

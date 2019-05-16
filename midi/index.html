@@ -6,7 +6,7 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 
 <style>
-body {
+body.hoge {
     width: 800px;
     max-width: 900px;
     margin: 0px auto;
@@ -40,7 +40,7 @@ body {
   #midi-data {
     position: relative;
     overflow: hidden;
-    width: 600px;
+    width: 300px;
     height: 300px;
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(214, 41, 41, 0.7);
@@ -53,43 +53,105 @@ body {
   }
   #midi-data ul li {
     padding: 0.2em 0.2em 0.2em 1em;
-    font-size: 1em;
+    font-size: 0.5em;
     font-family: monospace;
   }
 
- 
+.button1 {
+      WIDTH: 100px;
+      HEIGHT: 40px;
+      font-size: 1em;
+      margin : 0.5em;
+}
+
+.button2 {
+      WIDTH: 150px;
+      HEIGHT: 30px;
+      font-size: 1em;
+      margin : 0.5em;
+}
+
+.select {
+  font-size: 1em;
+  WIDTH: 200px;
+  HEIGHT: 40px;
+  margin : 0.5em;
+}
+
+.text {
+  font-size: 1em;
+  WIDTH: 600px;
+  HEIGHT: 40px;
+  margin : 0.5em;
+}
+
+video {
+  border-width: 1px;
+}
+
 </style>
-<script>
-
-
-</script>
-
 <title>MIDI data capture</title>
-
 </head>
 
 <body>
-
 <div>
-  <p>
-  <button onclick="saveTextAsFile()">Save</button><br/>
-  </p>
-  <p>
-  <button onClick="postMidiData()">Post</button><br/>
-  </p>
-  <p>
-  <button onclick="clearText()">Clear</button><br/>
-  </p>
-  <input type="text" id="playerName" value="player"/>
+  <button class="button1" onclick="saveTextAsFile()">Save</button>
+  <button class="button1" onClick="postMidiData()">Post</button>
+  <button class="button1" onclick="clearText()">Clear</button><br>
 
-  <section id="midi-data">  
-    <ul></ul>
-  </section>
+  <select class="select" id="playerName">
+  <option value="player">unknown</option>
+  <option value="kani">kani</option>
+  <option value="acane">acane</option>
+  <option value="sakura">sakura</option>
+  </select>
+
+  <select class="select" id="songName">
+  <option value="landmann">_shuman_landmann</option>
+  <option value="op53">_chopin_op53</option>
+  <option value="fur_elise">_fur_elise</option>
+  <option value="sonata14">_bethoven_sonata14</option>
+  </select>
+  <br>
+  
+  <input class="text" type="text" id="memo" value="memo"/>
 </div>
+
+<table>
+  <tr><td>
+    <section id="midi-data"> 
+        <ul></ul>
+    </section>
+  </td>
+  <td>
+
+      <div id="container">
+
+          <video id="gum" playsinline autoplay muted width="300"></video>
+          <video id="recorded" playsinline width="300"></video>
+      
+          <div>
+              <button class="button2" id="start">Start camera</button>
+              <button class="button2" id="record" disabled>Start Recording</button><br>
+              <button class="button2" id="play" disabled>Play</button>
+              <button class="button2" id="download" disabled>Download</button>
+              <br>Echo cancellation: <input type="checkbox" id="echoCancellation">
+          </div>
+      
+          <div>
+              <span id="errorMsg"></span>
+          </div>
+      
+      </div>
+  </td>
+</tr>
+</table>
+
 
     
     <canvas id="piano" width="600" height="80" style="background-color:white;"></canvas>
     <script type="text/javascript" src="piano.js"></script>
+    <script type="text/javascript" src="recorder.js"></script>
 
    <ul>
   <li><a href="../video/">mp4 upload</a></li>
