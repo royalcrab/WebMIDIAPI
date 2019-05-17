@@ -1,3 +1,80 @@
+/* MIT License 2019 royalcrab *
+
+/*
+    <canvas id="roll" width="1000" height="380"></canvas>
+    <script src="./roll.js"></script>
+
+    data 変数に MIDI データを入れておく必要がある。data がなければ
+    もm表示しない。ダブルクリック禁止を推奨。
+    
+    var data = [
+    { "time": "175", "c1": "254", "c2": "0", "c3": "0"},
+    { "time": "378", "c1": "254", "c2": "0", "c3": "0"},
+    { "time": "580", "c1": "254", "c2": "0", "c3": "0"},
+    { "time": "771", "c1": "254", "c2": "0", "c3": "0"},
+    { "time": "974", "c1": "254", "c2": "0", "c3": "0"},
+    null ];
+
+    こんな感でd、time, c1, c2, c3 を要素にもつオブジェクトの配列にする。
+
+    time は 1ms 単位で時刻を指定する。175 ということは 175ms ということ。
+    SMF の表記と違って、前のノートからの差分ではなくて、絶対時刻で指定する。
+
+    c1, c2, c3 は MIDI コマンドの 1 byte 目、2 byte 目、3 byte 目
+    4byte のコマンドには対応していない (オヌニコードみたいな)
+
+    デンプや分解能の情報はまったく拾っていない。拍子の情報もひろってない。
+
+    表示は c1 = 0x80 と 0x90 のデータ以外はほぼ無視している。
+    0x90: note on
+    0x80: note off
+    NOTE OF のコマンドでも、音量 0 で NOTE OFF のかわりにしてくる
+    MIDI 機材もあるので、NOTE ON 0 がきたら NOTE OFF と解釈するように
+    してある。
+
+    v は HTML5.0 の video タグを指定する。下記のような感じ。
+
+    <video id="video" width="640"><source src="piano2hh.mp4"></video>
+    
+    こうしておくと、指定した動画ファイルと連動して再生できるようになる。
+    
+    ボタン関係は、だいたい下記のようにしたら動くはず。
+
+    <input type="button" value="再生" onClick="playVideo()">
+    <input type="button" value="一時停止" onClick="pauseVideo()"> <br>
+    <input type="button" value="前" onClick="downVolume()">
+    <input type="button" value="後" onClick="upVolume()"> <br>
+    <input type="button" value="1秒前" onClick="seekDown()">
+    <input type="button" value="1秒後" onClick="seekUp()">
+    <br>
+    <input type="button" value="-0.1倍" onClick="fast()">
+    <input type="button" value="元の速度" onClick="setSpeed(1)">
+    <input type="button" value="+0.1倍" onClick="slow()">
+    <br>
+    <input type="button" value="縮小" onClick="scaleUp()">
+    <input type="button" value="拡大" onClick="scaleDown()">
+    <br>
+    <input type="button" value="前譜面" onClick="pageDown()">
+    <input type="button" value="次譜面" onClick="pageUp()">
+    <br>
+    現在（秒）：<span id="ichi">0</span><br>
+    全体（秒）：<span id="nagasa"></span><br>
+    再生速度  ：<span id="speed">1.0</span><br>
+
+    基本的に、動画側のフレームを変更することで、
+    ddEventListener("timeupdate", function(){});
+    を呼ばせて drawRoll で譜面をお update するみたいなことをしている。
+    コールバック関数で v.func みたいになってるところは、
+    v が存在しないときは短にエラーになる(譜面が更新されない)。
+    
+    拡大縮小の機能が適当で、現在表示されている譜面の先頭の時間部分を基準に
+    拡大縮小かけるようになっている。たぶん、赤い戦があるところを中心に
+    拡大縮小するとか本来すべき。
+
+    velocity を何も表示していない。
+
+*/
+
 var canvas;
 var ctx;
 var v;

@@ -134,18 +134,70 @@ async function init(constraints) {
   }
 }
 
+function handleError(error) {
+    console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+}
+
 document.querySelector('button#start').addEventListener('click', async () => {
+  var audioSource = audioInputSelect.value;
+  var videoSource = videoSelect.value;
+
   const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
   const constraints = {
     audio: {
+      deviceId: audioSource ? {exact: audioSource} : undefined,
       echoCancellation: {exact: hasEchoCancellation}
     },
     video: {
-      width: 1280, height: 720
+        deviceId: videoSource ? {exact: videoSource} : undefined,
+        width: 1280, height: 720
     }
   };
   console.log('Using media constraints:', constraints);
+  console.log('video selected:', videoSelect.value);
   await init(constraints);
 });
+
+//const videoElement = document.querySelector('video');
+const audioInputSelect = document.querySelector('select#audioSource');
+const audioOutputSelect = document.querySelector('select#audioOutput');
+const videoSelect = document.querySelector('select#videoSource');
+var selectors = [audioInputSelect, audioOutputSelect, videoSelect];
+
+audioOutputSelect.disabled = !('sinkId' in HTMLMediaElement.prototype);
+
+function gotDevices(deviceInfos) {
+    // Handles being called several times to update labels. Preserve values.
+    const values = selectors.map(select => select.value);
+    selectors.forEach(select => {
+      while (select.firstChild) {
+        select.removeChild(select.firstChild);
+      }
+    });
+    for (let i = 0; i !== deviceInfos.length; ++i) {
+      const deviceInfo = deviceInfos[i];
+      const option = document.createElement('option');
+      option.value = deviceInfo.deviceId;
+      if (deviceInfo.kind === 'audioinput') {
+        option.text = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
+        audioInputSelect.appendChild(option);
+      } else if (deviceInfo.kind === 'audiooutput') {
+        option.text = deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
+        audioOutputSelect.appendChild(option);
+      } else if (deviceInfo.kind === 'videoinput') {
+        option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+        videoSelect.appendChild(option);
+      } else {
+        console.log('Some other kind of source/device: ', deviceInfo);
+      }
+    }
+    selectors.forEach((select, selectorIndex) => {
+      if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+        select.value = values[selectorIndex];
+      }
+    });
+}
+
+navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
 
 

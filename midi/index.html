@@ -41,7 +41,7 @@ body.hoge {
     position: relative;
     overflow: hidden;
     width: 300px;
-    height: 300px;
+    height: 400px;
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(214, 41, 41, 0.7);
   }
@@ -71,7 +71,7 @@ body.hoge {
       margin : 0.5em;
 }
 
-.select {
+.select1 {
   font-size: 1em;
   WIDTH: 200px;
   HEIGHT: 40px;
@@ -99,14 +99,14 @@ video {
   <button class="button1" onClick="postMidiData()">Post</button>
   <button class="button1" onclick="clearText()">Clear</button><br>
 
-  <select class="select" id="playerName">
+  <select class="select1" id="playerName">
   <option value="player">unknown</option>
   <option value="kani">kani</option>
   <option value="acane">acane</option>
   <option value="sakura">sakura</option>
   </select>
 
-  <select class="select" id="songName">
+  <select class="select1" id="songName">
   <option value="landmann">_shuman_landmann</option>
   <option value="op53">_chopin_op53</option>
   <option value="fur_elise">_fur_elise</option>
@@ -129,19 +129,24 @@ video {
 
           <video id="gum" playsinline autoplay muted width="300"></video>
           <video id="recorded" playsinline width="300"></video>
+          <br>
       
-          <div>
               <button class="button2" id="start">Start camera</button>
               <button class="button2" id="record" disabled>Start Recording</button><br>
               <button class="button2" id="play" disabled>Play</button>
               <button class="button2" id="download" disabled>Download</button>
               <br>Echo cancellation: <input type="checkbox" id="echoCancellation">
-          </div>
-      
-          <div>
               <span id="errorMsg"></span>
-          </div>
       
+      </div>
+      <div class="select">
+          <label for="audioSource">Audio input source: </label><select id="audioSource"></select>
+      </div>
+      <div class="select">
+          <label for="audioOutput">Audio output destination: </label><select id="audioOutput"></select>
+      </div>
+      <div class="select">
+          <label for="videoSource">Video source: </label><select id="videoSource"></select>
       </div>
   </td>
 </tr>

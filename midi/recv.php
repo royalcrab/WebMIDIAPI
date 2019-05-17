@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 //            error_log($cmd . "\n", 3, "./error.log" );
 
-            $pdo->query( $cmd );
+            //$pdo->query( $cmd );
 
         }
 
