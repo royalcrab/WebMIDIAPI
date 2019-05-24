@@ -4,6 +4,8 @@ var startTime = new Date();
 var counter = 0;
 var name;
 
+var waitMode = false; // wait mode
+
 // start talking to MIDI controller
 if (navigator.requestMIDIAccess) {
     navigator.requestMIDIAccess({
@@ -27,12 +29,21 @@ function onMIDISuccess(midiData) {
 }
 
 function gotMIDImessage(messageData) {
+    if ( event.data[0] == 0xfe ) return; // 0xfe コマンドの受信は無視する。
+    if ( waitMode == true ){ // wait mode の場は midi 信号が来たら録画をはじめる
+        waitMode = false; // wait mode オフ
+        startRecording(); // 録画をはじめる
+        now = startTime; // 時間をリセットする
+    }
+
     var dataList = document.querySelector('#midi-data ul');
     var newItem = document.createElement('li');
     var newTime = new Date();
     var now = newTime.getTime()-startTime.getTime();
     var newText = messageData.data + "," + now;
     var newData = [now];
+
+    
 
     var str = "";
     for (var i=0; i<event.data.length; i++) {
@@ -177,4 +188,16 @@ function postMidiData() {
     });
 
     clearText();
+}
+
+function postAndStop() {
+
+    postMidiData();
+    stopRecording(); // ビデオが稼動しているとき
+    waitMode = true; // wait モードを on にして midi イベントを待つ
+}
+
+function WaitMode() {
+    stopRecording();
+    waitMode = true;
 }
