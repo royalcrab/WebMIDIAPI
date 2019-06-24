@@ -34,6 +34,8 @@ function gotMIDImessage(messageData) {
         waitMode = false; // wait mode オフ
         startRecording(); // 録画をはじめる
         now = startTime; // 時間をリセットする
+
+        console.warn("Start Recording (wait mode)");
     }
 
     var dataList = document.querySelector('#midi-data ul');
@@ -72,7 +74,7 @@ function gotMIDImessage(messageData) {
 
 // on failure
 function onMIDIFailure() {
-    console.warn("Not found MIDI controller")
+    console.warn("Not found MIDI controller");
 }
 
 
@@ -193,11 +195,15 @@ function postMidiData() {
 function postAndStop() {
 
     postMidiData();
-    stopRecording(); // ビデオが稼動しているとき
-    waitMode = true; // wait モードを on にして midi イベントを待つ
+    waitMode( true );
 }
 
-function WaitMode() {
-    stopRecording();
-    waitMode = true;
+function WaitMode(flag) {
+    if ( flag == true ){
+        stopRecording();
+        waitMode = true;
+    }else{
+        stopRecording();
+        waitMode = false;
+    }
 }

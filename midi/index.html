@@ -97,13 +97,16 @@ video {
 <div>
   <button class="button1" onclick="saveTextAsFile()">Save</button>
   <button class="button1" onClick="postMidiData()">Post</button>
-  <button class="button1" onclick="postAndStop()">Post/Wait</button>
-  <button class="button1" onclick="WaitMode()">Wait</button>
+  <button class="button1" onclick="postAndWait()">Post/Wait</button>
+  <button class="button1" onclick="WaitMode(true)">Wait</button>
+  <button class="button1" onclick="WaitMode(false)">no wait</button>
   <button class="button1" onclick="clearText()">Clear</button>
 
   <select class="select1" id="playerName">
   <option value="player">unknown</option>
   <option value="kani">kani</option>
+  <option value="matsui">matsui</option>
+  <option value="test">test</option>
   <option value="acane">acane</option>
   <option value="sakura">sakura</option>
   </select>
@@ -133,22 +136,22 @@ video {
           <video id="recorded" playsinline width="300"></video>
           <br>
       
-              <button class="button2" id="start">Start camera</button>
-              <button class="button2" id="record" disabled>Start Recording</button><br>
-              <button class="button2" id="play" disabled>Play</button>
-              <button class="button2" id="download" disabled>Download</button>
-              <br>Echo cancellation: <input type="checkbox" id="echoCancellation">
+              <button class="button2" id="start">カメラ起動</button>
+              <button class="button2" id="record" disabled>開始</button><br>
+              <button class="button2" id="play" disabled>再生</button>
+              <button class="button2" id="download" disabled>セーブ</button>
+              <br>エコーキャンセラー: <input type="checkbox" id="echoCancellation">
               <span id="errorMsg"></span>
       
       </div>
       <div class="select">
-          <label for="audioSource">Audio input source: </label><select id="audioSource"></select>
+          <label for="audioSource">音声入力デバイス </label><select id="audioSource"></select>
       </div>
       <div class="select">
-          <label for="audioOutput">Audio output destination: </label><select id="audioOutput"></select>
+          <label for="audioOutput">音声出力デバイス: </label><select id="audioOutput"></select>
       </div>
       <div class="select">
-          <label for="videoSource">Video source: </label><select id="videoSource"></select>
+          <label for="videoSource">映像入力デバイス: </label><select id="videoSource"></select>
       </div>
   </td>
 </tr>
